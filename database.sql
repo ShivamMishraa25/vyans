@@ -20,6 +20,10 @@ CREATE TABLE posts (
   tags VARCHAR(255) DEFAULT NULL,
   is_top_article TINYINT(1) NOT NULL DEFAULT 0,
   gallery_count INT NOT NULL DEFAULT 0,
+  -- New categorization flags
+  isBiography TINYINT(1) NOT NULL DEFAULT 0,
+  isNews TINYINT(1) NOT NULL DEFAULT 0,
+  isLaw TINYINT(1) NOT NULL DEFAULT 0,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -94,3 +98,12 @@ INSERT INTO hero (id, image_path, intro_text) VALUES
 -- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 -- Optional: backfill gallery_count
 -- UPDATE posts p SET gallery_count = (SELECT COUNT(*) FROM post_images pi WHERE pi.post_id = p.id);
+-- Migration for existing databases:
+-- ALTER TABLE posts ADD COLUMN isBiography TINYINT(1) NOT NULL DEFAULT 0 AFTER gallery_count;
+-- ALTER TABLE posts ADD COLUMN isNews TINYINT(1) NOT NULL DEFAULT 0 AFTER isBiography;
+-- ALTER TABLE posts ADD COLUMN isLaw TINYINT(1) NOT NULL DEFAULT 0 AFTER isNews;
+
+
+-- handle multiple images
+-- add another link for showing posts of biography and one more. also show this tab on homepage somewhere.
+-- share links must work. add twitter sharing link.

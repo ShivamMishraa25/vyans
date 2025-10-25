@@ -74,6 +74,9 @@
 			<nav class="hidden md:flex space-x-4">
 				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/index.php">होम</a>
 				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/articles.php">सभी लेख</a>
+				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/biography.php">जीवनी लेख</a>
+				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/law.php">कानून और न्याय</a>
+				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/news.php">ताज़ा समाचार</a>
 				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/about.php">हमारे बारे में</a>
 				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/contact.php">हमसे संपर्क करें</a>
 				<?php if (is_admin()): ?>
@@ -100,6 +103,9 @@
 			<div class="divide-y divide-gray-200">
 				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/index.php">होम</a>
 				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/articles.php">सभी लेख</a>
+				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/biography.php">जीवनी लेख</a>
+				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/law.php">कानून और न्याय</a>
+				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/news.php">ताज़ा समाचार</a>
 				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/about.php">हमारे बारे में</a>
 				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/contact.php">हमसे संपर्क करें</a>
 				<?php if (is_admin()): ?>
@@ -141,5 +147,4 @@
 			})();
 		</script>
 	</header>
-	<main class="min-h-[60vh]">
 	<main class="min-h-[60vh]">

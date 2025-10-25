@@ -10,6 +10,10 @@ $title_hi = $category = $content_hi = $tags = $cover_image_path = '';
 $is_top_article = 0;
 $slug = '';
 $existingGallery = []; // Added: holder for current gallery
+// New flags
+$isBiography = 0;
+$isNews = 0;
+$isLaw = 0;
 
 if ($editing) {
 	$stmt = $mysqli->prepare('SELECT * FROM posts WHERE id=? LIMIT 1');
@@ -25,6 +29,10 @@ if ($editing) {
 	$title_hi = $cur['title_hi']; $category = $cur['category']; $content_hi = $cur['content_hi'];
 	$tags = $cur['tags']; $cover_image_path = $cur['cover_image_path']; $is_top_article = (int)$cur['is_top_article'];
 	$slug = $cur['slug'];
+	// Load flags if present
+	$isBiography = (int)($cur['isBiography'] ?? 0);
+	$isNews      = (int)($cur['isNews'] ?? 0);
+	$isLaw       = (int)($cur['isLaw'] ?? 0);
 
 	// Added: fetch existing gallery images for this post
 	$stmtEG = $mysqli->prepare('SELECT id, image_path, caption FROM post_images WHERE post_id=? ORDER BY COALESCE(sort_order, 999999), id');
@@ -45,6 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$content_hi = trim($_POST['content_hi'] ?? '');
 		$tags = trim($_POST['tags'] ?? '');
 		$is_top_article = isset($_POST['is_top_article']) ? 1 : 0;
+		// New flags from form
+		$isBiography = isset($_POST['isBiography']) ? 1 : 0;
+		$isNews      = isset($_POST['isNews']) ? 1 : 0;
+		$isLaw       = isset($_POST['isLaw']) ? 1 : 0;
 		$selected_related = array_map('intval', $_POST['related_posts'] ?? []);
 
 		if ($title_hi === '') $errors[] = 'शीर्षक आवश्यक है।';
@@ -119,8 +131,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 		if (!$errors) {
 			if ($editing) {
-				$stmt = $mysqli->prepare('UPDATE posts SET title_hi=?, slug=?, content_hi=?, category=?, cover_image_path=?, tags=?, is_top_article=? WHERE id=?');
-				$stmt->bind_param('ssssssii', $title_hi, $slug, $content_hi, $category, $cover_image_path, $tags, $is_top_article, $id);
+				$stmt = $mysqli->prepare('UPDATE posts SET title_hi=?, slug=?, content_hi=?, category=?, cover_image_path=?, tags=?, is_top_article=?, isBiography=?, isNews=?, isLaw=? WHERE id=?');
+				$stmt->bind_param('ssssssiiiii', $title_hi, $slug, $content_hi, $category, $cover_image_path, $tags, $is_top_article, $isBiography, $isNews, $isLaw, $id);
 				$stmt->execute();
 				$stmt->close();
 
@@ -153,8 +165,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 				flash('msg', 'लेख अपडेट किया गया।');
 			} else {
-				$stmt = $mysqli->prepare('INSERT INTO posts (title_hi, slug, content_hi, category, cover_image_path, tags, is_top_article) VALUES (?,?,?,?,?,?,?)');
-				$stmt->bind_param('ssssssi', $title_hi, $slug, $content_hi, $category, $cover_image_path, $tags, $is_top_article);
+				$stmt = $mysqli->prepare('INSERT INTO posts (title_hi, slug, content_hi, category, cover_image_path, tags, is_top_article, isBiography, isNews, isLaw) VALUES (?,?,?,?,?,?,?,?,?,?)');
+				$stmt->bind_param('ssssssiiii', $title_hi, $slug, $content_hi, $category, $cover_image_path, $tags, $is_top_article, $isBiography, $isNews, $isLaw);
 				$stmt->execute();
 				$newId = $stmt->insert_id;
 				$stmt->close();
@@ -232,9 +244,23 @@ include __DIR__ . '/header.php';
 			<label class="block text-sm mb-1 text-gray-700">टैग्स/हैशटैग (कौमा से अलग करें)</label>
 			<input type="text" name="tags" value="<?= e($tags) ?>" placeholder="उदा: भारत,टेक,AI" class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-amber-500">
 		</div>
-		<div class="flex items-center gap-2">
-			<input id="topChk" type="checkbox" name="is_top_article" <?= $is_top_article ? 'checked' : '' ?> class="w-4 h-4 text-blue-600">
-			<label for="topChk">शीर्ष लेख के रूप में दिखाएँ</label>
+		<div class="flex flex-wrap items-center gap-4">
+			<label class="inline-flex items-center gap-2">
+				<input type="checkbox" name="is_top_article" <?= $is_top_article ? 'checked' : '' ?> class="w-4 h-4 text-blue-600">
+				<span>शीर्ष लेख</span>
+			</label>
+			<label class="inline-flex items-center gap-2">
+				<input type="checkbox" name="isBiography" <?= $isBiography ? 'checked' : '' ?> class="w-4 h-4 text-blue-600">
+				<span>जीवनी लेख</span>
+			</label>
+			<label class="inline-flex items-center gap-2">
+				<input type="checkbox" name="isLaw" <?= $isLaw ? 'checked' : '' ?> class="w-4 h-4 text-blue-600">
+				<span>कानून और न्याय</span>
+			</label>
+			<label class="inline-flex items-center gap-2">
+				<input type="checkbox" name="isNews" <?= $isNews ? 'checked' : '' ?> class="w-4 h-4 text-blue-600">
+				<span>ताज़ा समाचार</span>
+			</label>
 		</div>
 		<div>
 			<label class="block text-sm mb-1 text-gray-700">कवर छवि</label>
