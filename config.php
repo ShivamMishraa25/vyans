@@ -5,10 +5,10 @@ if (session_status() === PHP_SESSION_NONE) {
 date_default_timezone_set('Asia/Kolkata');
 
 // Database credentials (adjust as needed)
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'vyans');
+define('DB_HOST', 'localhost'); // sdb-h.hosting.stackcp.net
+define('DB_USER', 'root'); // thevyans
+define('DB_PASS', ''); // rBI0~uxU|z+}
+define('DB_NAME', 'vyans'); // thevyans-313836796c
 
 // Base URL (adjust if your local URL differs)
 define('BASE_URL', 'http://localhost/vyans');
