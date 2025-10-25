@@ -56,5 +56,10 @@
 		<div class="h-1 bg-gradient-to-r from-red-500 via-blue-600 to-fuchsia-600"></div>
 		<div class="text-center text-xs text-gray-300 py-4">© <?= date('Y') ?> व्यान्स न्यूज़</div>
 	</footer>
+
+	<!-- Embeds: Instagram + Facebook SDK (client-side rendering) -->
+	<div id="fb-root"></div>
+	<script async defer crossorigin="anonymous" src="https://connect.facebook.net/hi_IN/sdk.js#xfbml=1&version=v18.0"></script>
+	<script async src="https://www.instagram.com/embed.js"></script>
 </body>
 </html>

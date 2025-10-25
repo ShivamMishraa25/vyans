@@ -41,7 +41,7 @@ include __DIR__ . '/header.php';
 			</div>
 			<h1 class="text-3xl font-bold mt-2 text-blue-800"><?= e($post['title_hi']) ?></h1>
 			<div class="prose max-w-none prose-indigo mt-4">
-				<p><?= nl2br(e($post['content_hi'])) ?></p>
+				<?= embed_links($post['content_hi']) ?>
 			</div>
 
 			<?php if (!empty($post['tags'])): ?>
