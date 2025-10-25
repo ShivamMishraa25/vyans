@@ -46,7 +46,7 @@ $stmtTop->close();
 </section>
 <?php endif; ?>
 
-<section class="max-w-6xl mx-auto px-4 py-8">
+<section class="max-w-6xl mx-auto px-4 py-4">
 	<h2 class="text-2xl font-bold mb-4 text-blue-800">शीर्ष लेख</h2>
 	<div class="grid md:grid-cols-3 gap-6">
 		<?php foreach ($top as $p): ?>
@@ -61,6 +61,35 @@ $stmtTop->close();
 				</div>
 			</a>
 		<?php endforeach; ?>
+	</div>
+</section>
+
+<section class="max-w-6xl mx-auto px-4 py-3">
+	<div class="flex flex-wrap justify-center gap-2 md:gap-3">
+		<a href="<?= e(BASE_URL) ?>/articles.php"
+		   class="inline-flex items-center px-3 py-2 rounded bg-white ring-1 ring-blue-200 text-blue-700 hover:bg-blue-50">
+			सभी लेख
+		</a>
+		<a href="<?= e(BASE_URL) ?>/biography.php"
+		   class="inline-flex items-center px-3 py-2 rounded bg-white ring-1 ring-indigo-200 text-indigo-700 hover:bg-indigo-50">
+			जीवनी लेख
+		</a>
+		<a href="<?= e(BASE_URL) ?>/law.php"
+		   class="inline-flex items-center px-3 py-2 rounded bg-white ring-1 ring-teal-200 text-teal-700 hover:bg-teal-50">
+			कानून और न्याय
+		</a>
+		<a href="<?= e(BASE_URL) ?>/news.php"
+		   class="inline-flex items-center px-3 py-2 rounded bg-white ring-1 ring-fuchsia-200 text-fuchsia-700 hover:bg-fuchsia-50">
+			ताज़ा समाचार
+		</a>
+		<a href="<?= e(BASE_URL) ?>/about.php"
+		   class="inline-flex items-center px-3 py-2 rounded bg-white ring-1 ring-amber-200 text-amber-700 hover:bg-amber-50">
+			हमारे बारे में
+		</a>
+		<a href="<?= e(BASE_URL) ?>/contact.php"
+		   class="inline-flex items-center px-3 py-2 rounded bg-white ring-1 ring-gray-300 text-gray-900 hover:bg-gray-50">
+			हमसे संपर्क करें
+		</a>
 	</div>
 </section>
 

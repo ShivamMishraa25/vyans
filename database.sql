@@ -107,3 +107,4 @@ INSERT INTO hero (id, image_path, intro_text) VALUES
 -- handle multiple images
 -- add another link for showing posts of biography and one more. also show this tab on homepage somewhere.
 -- share links must work. add twitter sharing link.
+-- add meta tags and favicon
