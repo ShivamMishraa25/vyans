@@ -1,0 +1,54 @@
+<?php
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/functions.php';
+$pageTitle = 'सभी लेख';
+include __DIR__ . '/header.php';
+
+$perPage = 10;
+$page = max(1, (int)($_GET['page'] ?? 1));
+$offset = ($page - 1) * $perPage;
+
+// total
+$res = $mysqli->query('SELECT COUNT(*) AS c FROM posts');
+$total = (int)$res->fetch_assoc()['c'];
+$res->close();
+
+// page data
+$stmt = $mysqli->prepare('SELECT id, title_hi, slug, content_hi, category, cover_image_path, created_at FROM posts ORDER BY created_at DESC LIMIT ? OFFSET ?');
+$stmt->bind_param('ii', $perPage, $offset);
+$stmt->execute();
+$rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
+$totalPages = max(1, (int)ceil($total / $perPage));
+?>
+<section class="max-w-6xl mx-auto px-4 py-8">
+	<h1 class="text-2xl font-bold mb-4">सभी लेख</h1>
+	<div class="grid md:grid-cols-2 gap-6">
+		<?php foreach ($rows as $p): ?>
+			<a href="<?= e(BASE_URL . '/article.php?slug=' . urlencode($p['slug'])) ?>" class="block bg-white rounded shadow hover:shadow-lg transition overflow-hidden">
+				<?php if (!empty($p['cover_image_path'])): ?>
+					<img src="<?= e(img_src($p['cover_image_path'])) ?>" alt="<?= e($p['title_hi']) ?>" class="w-full h-44 object-cover">
+				<?php else: ?>
+					<div class="w-full h-44 bg-gray-200"></div>
+				<?php endif; ?>
+				<div class="p-4">
+					<span class="text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded"><?= e($p['category']) ?></span>
+					<h3 class="font-semibold text-lg mt-2"><?= e($p['title_hi']) ?></h3>
+					<p class="text-sm text-gray-600"><?= e(excerpt($p['content_hi'], 180)) ?></p>
+					<p class="text-xs text-gray-400 mt-2"><?= date('d M Y', strtotime($p['created_at'])) ?></p>
+				</div>
+			</a>
+		<?php endforeach; ?>
+	</div>
+	<div class="flex items-center justify-center gap-2 mt-6">
+		<?php if ($page > 1): ?>
+			<a class="px-3 py-1 bg-white border rounded hover:bg-gray-50" href="?page=<?= $page-1 ?>">पिछला</a>
+		<?php endif; ?>
+		<span class="text-sm">पेज <?= $page ?> / <?= $totalPages ?></span>
+		<?php if ($page < $totalPages): ?>
+			<a class="px-3 py-1 bg-white border rounded hover:bg-gray-50" href="?page=<?= $page+1 ?>">अगला</a>
+		<?php endif; ?>
+	</div>
+</section>
+<?php include __DIR__ . '/footer.php'; ?>
