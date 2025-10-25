@@ -66,6 +66,5 @@ INSERT INTO post_relations (post_id, related_post_id) VALUES
 INSERT INTO hero (id, image_path, intro_text) VALUES
 (1, 'uploads/images/sample1.jpg', N'द व्यान्स में आपका स्वागत है। ताज़ा ख़बरें, विश्लेषण और प्रेरक कहानियाँ, सब कुछ एक ही जगह।');
 
--- rBI0~uxU|z+} password
--- thevyans-313836796c database
--- thevyans username
+-- handle multiple images
+-- add another link for showing posts of biography and one more. also show this tab on homepage somewhere. 

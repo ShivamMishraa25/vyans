@@ -182,9 +182,16 @@ include __DIR__ . '/header.php';
 		</div>
 		<div>
 			<label class="block text-sm mb-1 text-gray-700">कवर छवि</label>
-			<input type="file" name="cover_image" accept="image/*" class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-indigo-500">
+			<input id="coverInput" type="file" name="cover_image" accept="image/*" class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-indigo-500">
 			<?php if ($cover_image_path): ?>
 				<p class="text-xs mt-1">वर्तमान: <a target="_blank" class="text-blue-700 hover:underline" href="<?= e(img_src($cover_image_path)) ?>"><?= e($cover_image_path) ?></a></p>
+				<div class="mt-2">
+					<img id="coverPreview" src="<?= e(img_src($cover_image_path)) ?>" alt="कवर छवि पूर्वावलोकन" class="w-full h-48 object-cover rounded border">
+				</div>
+			<?php else: ?>
+				<div class="mt-2 hidden" id="coverPreviewWrap">
+					<img id="coverPreview" src="" alt="कवर छवि पूर्वावलोकन" class="w-full h-48 object-cover rounded border">
+				</div>
 			<?php endif; ?>
 		</div>
 		<div>
@@ -209,15 +216,46 @@ include __DIR__ . '/header.php';
 		<p id="formErr" class="text-sm text-red-600 hidden">कृपया आवश्यक फ़ील्ड भरें।</p>
 	</form>
 	<script>
+		// Basic required-field check (existing)
 		document.getElementById('postForm').addEventListener('submit', function(e){
 			const title = this.title_hi.value.trim();
 			const cat = this.category.value.trim();
 			const content = this.content_hi.value.trim();
 			if (!title || !cat || !content) {
 				e.preventDefault();
-				document.getElementById('formErr').classList.remove('hidden');
+				document.getElementById('formErr')?.classList.remove('hidden');
 			}
 		});
+
+		// Live preview for selected cover image
+		(function(){
+			const input = document.getElementById('coverInput');
+			const img = document.getElementById('coverPreview');
+			const wrap = document.getElementById('coverPreviewWrap') || img?.parentElement;
+			let lastUrl = null;
+
+			if (!input || !img) return;
+
+			input.addEventListener('change', function(){
+				if (!this.files || !this.files[0]) {
+					if (wrap) wrap.classList.add('hidden');
+					if (img) img.removeAttribute('src');
+					if (lastUrl) { URL.revokeObjectURL(lastUrl); lastUrl = null; }
+					return;
+				}
+				const file = this.files[0];
+				if (!file.type.match(/^image\//)) return;
+				if (lastUrl) URL.revokeObjectURL(lastUrl);
+				const url = URL.createObjectURL(file);
+				lastUrl = url;
+				img.src = url;
+				if (wrap) wrap.classList.remove('hidden');
+			});
+			// Revoke URL on unload
+			window.addEventListener('beforeunload', function(){
+				if (lastUrl) URL.revokeObjectURL(lastUrl);
+			});
+		})();
 	</script>
 </section>
 <?php include __DIR__ . '/footer.php'; ?>
