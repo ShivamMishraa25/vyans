@@ -6,6 +6,7 @@ USE vyans;
 DROP TABLE IF EXISTS post_relations;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS admin;
+DROP TABLE IF EXISTS hero;
 
 -- Posts table
 CREATE TABLE posts (
@@ -36,6 +37,14 @@ CREATE TABLE post_relations (
   CONSTRAINT fk_pr_related FOREIGN KEY (related_post_id) REFERENCES posts(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Hero table
+CREATE TABLE hero (
+  id TINYINT NOT NULL PRIMARY KEY DEFAULT 1,
+  image_path VARCHAR(255) DEFAULT NULL,
+  intro_text TEXT DEFAULT NULL,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- Mock posts (Hindi)
 INSERT INTO posts (title_hi, slug, content_hi, category, cover_image_path, tags, is_top_article)
 VALUES
@@ -52,3 +61,11 @@ VALUES ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi')
 INSERT INTO post_relations (post_id, related_post_id) VALUES
 (1, 2),
 (1, 3);
+
+-- Seed a default hero row
+INSERT INTO hero (id, image_path, intro_text) VALUES
+(1, 'uploads/images/sample1.jpg', N'द व्यान्स में आपका स्वागत है। ताज़ा ख़बरें, विश्लेषण और प्रेरक कहानियाँ, सब कुछ एक ही जगह।');
+
+-- rBI0~uxU|z+} password
+-- thevyans-313836796c database
+-- thevyans username

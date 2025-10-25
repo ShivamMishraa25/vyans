@@ -4,6 +4,13 @@ require_once __DIR__ . '/functions.php';
 $pageTitle = 'होम';
 include __DIR__ . '/header.php';
 
+// Fetch hero (single row)
+$hero = null;
+if ($resH = $mysqli->query('SELECT image_path, intro_text FROM hero WHERE id=1 LIMIT 1')) {
+	$hero = $resH->fetch_assoc();
+	$resH->close();
+}
+
 // Latest 5
 $stmtLatest = $mysqli->prepare('SELECT id, title_hi, slug, content_hi, cover_image_path, created_at FROM posts ORDER BY created_at DESC LIMIT 5');
 $stmtLatest->execute();
@@ -18,6 +25,27 @@ $resTop = $stmtTop->get_result();
 $top = $resTop->fetch_all(MYSQLI_ASSOC);
 $stmtTop->close();
 ?>
+
+<?php if ($hero): ?>
+<section class="max-w-6xl mx-auto px-0 pt-0 md:px-4 md:pt-6">
+	<div class="relative rounded-none md:rounded-xl overflow-hidden shadow ring-1 ring-blue-100">
+		<?php if (!empty($hero['image_path'])): ?>
+			<img src="<?= e(img_src($hero['image_path'])) ?>" alt="हीरो इमेज" class="w-full h-64 md:h-80 object-cover">
+		<?php else: ?>
+			<div class="w-full h-64 md:h-80 bg-gradient-to-br from-blue-50 via-fuchsia-50 to-amber-50"></div>
+		<?php endif; ?>
+		<div class="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent"></div>
+		<div class="absolute inset-0 flex items-end">
+			<div class="p-4 md:p-6">
+				<p class="text-white text-lg md:text-xl drop-shadow">
+					<?= nl2br(e($hero['intro_text'] ?? '')) ?>
+				</p>
+			</div>
+		</div>
+	</div>
+</section>
+<?php endif; ?>
+
 <section class="max-w-6xl mx-auto px-4 py-8">
 	<h2 class="text-2xl font-bold mb-4 text-blue-800">शीर्ष लेख</h2>
 	<div class="grid md:grid-cols-3 gap-6">

@@ -45,7 +45,10 @@ include __DIR__ . '/header.php';
 <section class="max-w-6xl mx-auto px-4 py-8">
 	<div class="flex items-center justify-between mb-4">
 		<h1 class="text-2xl font-bold text-blue-800">डैशबोर्ड</h1>
-		<a href="<?= e(BASE_URL) ?>/admin_edit.php" class="btn-primary px-4 py-2 rounded shadow">नया लेख</a>
+		<div class="flex gap-2">
+			<a href="<?= e(BASE_URL) ?>/admin_edit.php" class="btn-primary px-4 py-2 rounded shadow">नया लेख</a>
+			<a href="<?= e(BASE_URL) ?>/admin/hero_edit.php" class="px-4 py-2 rounded border hover:bg-blue-50">हीरो सेक्शन</a>
+		</div>
 	</div>
 	<?php if ($msg): ?><div class="bg-green-50 text-green-700 px-3 py-2 rounded mb-3"><?= e($msg) ?></div><?php endif; ?>
 	<div class="overflow-auto bg-white rounded shadow ring-1 ring-blue-100">
