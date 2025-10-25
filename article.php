@@ -74,25 +74,28 @@ include __DIR__ . '/header.php';
 					<!-- Facebook -->
 					<a class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white ring-1 ring-blue-200 text-blue-700 hover:bg-blue-50"
 					   href="https://www.facebook.com/sharer/sharer.php?u=<?= $shareUrl ?>" target="_blank" rel="noopener" aria-label="Facebook पर साझा करें">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-							<path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06C2 17.06 5.66 21.2 10.44 22v-7.03H7.9v-2.9h2.54v-2.2c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.62.77-1.62 1.56v1.86h2.77l-.44 2.9h-2.33V22C18.34 21.2 22 17.06 22 12.06z"/>
-						</svg>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06C2 17.06 5.66 21.2 10.44 22v-7.03H7.9v-2.9h2.54v-2.2c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.62.77-1.62 1.56v1.86h2.77l-.44 2.9h-2.33V22C18.34 21.2 22 17.06 22 12.06z"/></svg>
 					</a>
 					<!-- X (Twitter) -->
 					<a class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white ring-1 ring-gray-300 text-gray-900 hover:bg-gray-50"
 					   href="https://twitter.com/intent/tweet?text=<?= $shareText ?>&url=<?= $shareUrl ?>" target="_blank" rel="noopener" aria-label="X (Twitter) पर साझा करें">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-							<path d="M3 3h3.2l5.1 7.1L16.8 3H21l-7.6 9.9L21.7 21h-3.2l-5.6-7.6L7 21H2.7l7.9-10.2L3 3z"/>
-						</svg>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 3h3.2l5.1 7.1L16.8 3H21l-7.6 9.9L21.7 21h-3.2l-5.6-7.6L7 21H2.7l7.9-10.2L3 3z"/></svg>
 					</a>
-					<!-- WhatsApp -->
+					<!-- WhatsApp (wa.me format) -->
 					<a class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white ring-1 ring-green-200 text-green-600 hover:bg-green-50"
-					   href="https://api.whatsapp.com/send?text=<?= $shareText ?>%20<?= $shareUrl ?>" target="_blank" rel="noopener" aria-label="व्हाट्सएप पर साझा करें">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-							<path d="M20 3.9A10 10 0 0 0 4.6 18.8L3 22l3.3-1.6A10 10 0 1 0 20 3.9Zm-8 16.2c-1.7 0-3.3-.5-4.6-1.5l-.3-.2-2 .9.8-2.1-.2-.3A8 8 0 1 1 12 20.1Zm4.6-5.5c-.3-.2-1.7-.8-1.9-.9s-.4-.1-.5.1l-.7.9c-.1.1-.2.2-.4.1-.2-.1-.9-.3-1.7-1-.6-.5-1-1.2-1.1-1.4-.1-.2 0-.3.1-.4l.3-.3c.1-.1.1-.2.2-.3s.1-.2.1-.3 0-.2 0-.3 0-.3-.2-.3l-.9-1.9c-.2-.5-.4-.4-.6-.4h-.5s-.3 0-.5.2-.6.5-.6 1.3.6 1.6.7 1.7c.1.2 1.2 2 3 2.8 1.8.8 1.8.5 2.1.5s1-.4 1.1-.7c.1-.2.1-.5.1-.6 0-.1 0-.1-.1-.2Z"/>
-						</svg>
+					   href="https://wa.me/?text=<?= $shareText ?>%20<?= $shareUrl ?>" target="_blank" rel="noopener" aria-label="व्हाट्सएप पर साझा करें">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 3.9A10 10 0 0 0 4.6 18.8L3 22l3.3-1.6A10 10 0 1 0 20 3.9Zm-8 16.2c-1.7 0-3.3-.5-4.6-1.5l-.3-.2-2 .9.8-2.1-.2-.3A8 8 0 1 1 12 20.1Zm4.6-5.5c-.3-.2-1.7-.8-1.9-.9s-.4-.1-.5.1l-.7.9c-.1.1-.2.2-.4.1-.2-.1-.9-.3-1.7-1-.6-.5-1-1.2-1.1-1.4-.1-.2 0-.3.1-.4l.3-.3c.1-.1.1-.2.2-.3s.1-.2.1-.3 0-.2 0-.3 0-.3-.2-.3l-.9-1.9c-.2-.5-.4-.4-.6-.4h-.5s-.3 0-.5.2-.6.5-.6 1.3.6 1.6.7 1.7c.1.2 1.2 2 3 2.8 1.8.8 1.8.5 2.1.5s1-.4 1.1-.7c.1-.2.1-.5.1-.6 0-.1 0-.1-.1-.2Z"/></svg>
 					</a>
+					<!-- Copy Link -->
+					<button type="button" id="copyLinkBtn"
+						class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-white ring-1 ring-gray-200 text-gray-700 hover:bg-gray-50"
+						data-url="<?= e(current_url()) ?>" aria-label="लिंक कॉपी करें">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+							<path d="M16 1H8a2 2 0 0 0-2 2v3h2V3h8v6h3V3a2 2 0 0 0-2-2z"/><path d="M5 7h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2zm0 2v11h10V9H5z"/>
+						</svg>
+					</button>
 				</div>
+				<p id="copyLinkMsg" class="text-xs text-green-600 mt-2 hidden">लिंक कॉपी हो गया!</p>
 			</div>
 
 			<?php
@@ -167,4 +170,42 @@ include __DIR__ . '/header.php';
 		</div>
 	<?php endif; ?>
 </section>
+<?php
+// ...existing code before footer include...
+?>
+<script>
+	(function(){
+		var btn = document.getElementById('copyLinkBtn');
+		var msg = document.getElementById('copyLinkMsg');
+		if (!btn) return;
+		function showMsg(){
+			if (!msg) return;
+			msg.classList.remove('hidden');
+			clearTimeout(showMsg._t);
+			showMsg._t = setTimeout(function(){ msg.classList.add('hidden'); }, 1800);
+		}
+		btn.addEventListener('click', function(){
+			var url = btn.getAttribute('data-url') || window.location.href;
+			if (navigator.clipboard && navigator.clipboard.writeText) {
+				navigator.clipboard.writeText(url).then(showMsg).catch(function(){
+					// Fallback
+					var ta = document.createElement('textarea');
+					ta.value = url;
+					document.body.appendChild(ta);
+					ta.select();
+					try { document.execCommand('copy'); showMsg(); } catch(e){}
+					document.body.removeChild(ta);
+				});
+			} else {
+				// Legacy fallback
+				var ta = document.createElement('textarea');
+				ta.value = url;
+				document.body.appendChild(ta);
+				ta.select();
+				try { document.execCommand('copy'); showMsg(); } catch(e){}
+				document.body.removeChild(ta);
+			}
+		});
+	})();
+</script>
 <?php include __DIR__ . '/footer.php'; ?>

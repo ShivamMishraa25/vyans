@@ -57,7 +57,26 @@
 		<meta property="og:title" content="<?= e($og['title'] ?? '') ?>">
 		<meta property="og:image" content="<?= e($og['image'] ?? '') ?>">
 		<meta property="og:url" content="<?= e($og['url'] ?? '') ?>">
+		<meta property="og:type" content="article">
 		<meta name="twitter:card" content="<?= e($og['twitter_card'] ?? 'summary_large_image') ?>">
+		<meta name="twitter:title" content="<?= e($og['title'] ?? '') ?>">
+		<?php if (!empty($og['description'])): ?>
+			<meta name="twitter:description" content="<?= e($og['description']) ?>">
+		<?php endif; ?>
+		<?php if (!empty($og['image'])): ?>
+			<meta name="twitter:image" content="<?= e($og['image']) ?>">
+		<?php endif; ?>
+	<?php else: ?>
+		<!-- Homepage defaults -->
+		<meta property="og:title" content="The Vyans | Advocate Anshu Singh">
+		<meta property="og:description" content="Explore expert articles and legal insights on education, law, and other topics. A platform by Advocate Anshu Singh.">
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="<?= e(rtrim(BASE_URL, '/')) ?>">
+		<meta property="og:image" content="https://ibb.co/DPzH5GNN">
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:title" content="The Vyans | Advocate Anshu Singh">
+		<meta name="twitter:description" content="Explore expert articles and legal insights on education, law, and other topics. A platform by Advocate Anshu Singh.">
+		<meta name="twitter:image" content="https://ibb.co/DPzH5GNN">
 	<?php endif; ?>
 
 	<link rel="icon" href="<?= e(BASE_URL) ?>/favicon.ico">
