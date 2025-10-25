@@ -168,6 +168,37 @@ include __DIR__ . '/header.php';
 				<?php endforeach; ?>
 			</div>
 		</div>
+
+        <!-- buttons -->
+         <section class="max-w-6xl mx-auto px-4 mt-12">
+            <div class="flex flex-wrap justify-center gap-2 md:gap-3">
+                <a href="<?= e(BASE_URL) ?>/articles.php"
+                class="inline-flex items-center px-3 py-2 rounded text-white bg-blue-600 hover:bg-blue-700 shadow">
+                    सभी लेख
+                </a>
+                <a href="<?= e(BASE_URL) ?>/biography.php"
+                class="inline-flex items-center px-3 py-2 rounded text-white bg-indigo-600 hover:bg-indigo-700 shadow">
+                    जीवनी लेख
+                </a>
+                <a href="<?= e(BASE_URL) ?>/law.php"
+                class="inline-flex items-center px-3 py-2 rounded text-white bg-teal-600 hover:bg-teal-700 shadow">
+                    कानून और न्याय
+                </a>
+                <a href="<?= e(BASE_URL) ?>/news.php"
+                class="inline-flex items-center px-3 py-2 rounded text-white bg-fuchsia-600 hover:bg-fuchsia-700 shadow">
+                    ताज़ा समाचार
+                </a>
+                <a href="<?= e(BASE_URL) ?>/about.php"
+                class="inline-flex items-center px-3 py-2 rounded text-white bg-amber-600 hover:bg-amber-700 shadow">
+                    हमारे बारे में
+                </a>
+                <a href="<?= e(BASE_URL) ?>/contact.php"
+                class="inline-flex items-center px-3 py-2 rounded text-white bg-gray-800 hover:bg-gray-900 shadow">
+                    हमसे संपर्क करें
+                </a>
+            </div>
+        </section>
+
 	<?php endif; ?>
 </section>
 <?php
