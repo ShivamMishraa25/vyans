@@ -108,3 +108,4 @@ INSERT INTO hero (id, image_path, intro_text) VALUES
 -- add another link for showing posts of biography and one more. also show this tab on homepage somewhere.
 -- share links must work. add twitter sharing link.
 -- add meta tags and favicon
+-- add read all articles button at the bottom of homepage main section.

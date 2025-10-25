@@ -58,6 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$isNews      = isset($_POST['isNews']) ? 1 : 0;
 		$isLaw       = isset($_POST['isLaw']) ? 1 : 0;
 		$selected_related = array_map('intval', $_POST['related_posts'] ?? []);
+		$replaceGallery = isset($_POST['replace_gallery']); // new
+		$removeIds = array_map('intval', $_POST['remove_gallery_ids'] ?? []); // new
 
 		if ($title_hi === '') $errors[] = 'शीर्षक आवश्यक है।';
 		if ($content_hi === '') $errors[] = 'सामग्री आवश्यक है।';
@@ -150,7 +152,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					}
 					$stmtR->close();
 				}
-				// Insert new gallery images (if any)
+				// Remove gallery images (replace all or selected)
+				if ($replaceGallery) {
+					// delete all existing gallery for this post
+					$stmtGetAll = $mysqli->prepare('SELECT id, image_path FROM post_images WHERE post_id=?');
+					$stmtGetAll->bind_param('i', $id);
+					$stmtGetAll->execute();
+					$resAll = $stmtGetAll->get_result();
+					while ($row = $resAll->fetch_assoc()) {
+						$abs = __DIR__ . '/' . ltrim($row['image_path'], '/');
+						if (is_file($abs)) { @unlink($abs); }
+					}
+					$stmtGetAll->close();
+					$stmtDelAll = $mysqli->prepare('DELETE FROM post_images WHERE post_id=?');
+					$stmtDelAll->bind_param('i', $id);
+					$stmtDelAll->execute();
+					$stmtDelAll->close();
+				} elseif ($removeIds) {
+					// delete only selected ids
+					$stmtOne = $mysqli->prepare('SELECT image_path FROM post_images WHERE post_id=? AND id=? LIMIT 1');
+					$stmtDel = $mysqli->prepare('DELETE FROM post_images WHERE post_id=? AND id=?');
+					foreach ($removeIds as $rid) {
+						$stmtOne->bind_param('ii', $id, $rid);
+						$stmtOne->execute();
+						$imgRow = $stmtOne->get_result()->fetch_assoc();
+						if ($imgRow && !empty($imgRow['image_path'])) {
+							$abs = __DIR__ . '/' . ltrim($imgRow['image_path'], '/');
+							if (is_file($abs)) { @unlink($abs); }
+						}
+						$stmtDel->bind_param('ii', $id, $rid);
+						$stmtDel->execute();
+					}
+					$stmtOne->close();
+					$stmtDel->close();
+				}
+				// Insert newly uploaded gallery images (if any)
 				if ($galleryNew) {
 					$stmtGI = $mysqli->prepare('INSERT INTO post_images (post_id, image_path) VALUES (?, ?)');
 					foreach ($galleryNew as $gp) {
@@ -158,10 +194,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 						$stmtGI->execute();
 					}
 					$stmtGI->close();
-					// bump gallery_count
-					$add = count($galleryNew);
-					$mysqli->query('UPDATE posts SET gallery_count = gallery_count + ' . (int)$add . ' WHERE id = ' . (int)$id);
 				}
+				// Recalculate gallery_count to be accurate
+				$stmtCnt = $mysqli->prepare('UPDATE posts p SET gallery_count = (SELECT COUNT(*) FROM post_images pi WHERE pi.post_id = ?) WHERE p.id = ?');
+				$stmtCnt->bind_param('ii', $id, $id);
+				$stmtCnt->execute();
+				$stmtCnt->close();
 
 				flash('msg', 'लेख अपडेट किया गया।');
 			} else {
@@ -188,8 +226,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 						$stmtGI->execute();
 					}
 					$stmtGI->close();
-					$add = count($galleryNew);
-					$mysqli->query('UPDATE posts SET gallery_count = gallery_count + ' . (int)$add . ' WHERE id = ' . (int)$newId);
+				}
+				// Recalculate gallery_count for new post
+				if (!empty($newId)) {
+					$stmtCnt = $mysqli->prepare('UPDATE posts p SET gallery_count = (SELECT COUNT(*) FROM post_images pi WHERE pi.post_id = ?) WHERE p.id = ?');
+					$stmtCnt->bind_param('ii', $newId, $newId);
+					$stmtCnt->execute();
+					$stmtCnt->close();
 				}
 
 				flash('msg', 'नया लेख जोड़ा गया।');
@@ -279,6 +322,11 @@ include __DIR__ . '/header.php';
 
 		<div>
 			<label class="block text-sm mb-1 text-gray-700">गैलरी छवियाँ (एक से अधिक)</label>
+			<!-- NEW: Replace entire gallery switch -->
+			<label class="inline-flex items-center gap-2 mb-2">
+				<input type="checkbox" name="replace_gallery" class="w-4 h-4 text-blue-600">
+				<span class="text-sm text-gray-700">नई छवियाँ जोड़ने से पहले पूरी गैलरी बदलें (पुरानी हटेगी)</span>
+			</label>
 			<input id="galleryInput" type="file" name="gallery_images[]" accept="image/*" multiple class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-indigo-500">
 			<p class="text-xs text-gray-500 mt-1">एक से अधिक छवियाँ चुनें। JPG/PNG/GIF/WEBP समर्थित।</p>
 
@@ -287,11 +335,18 @@ include __DIR__ . '/header.php';
 					<h4 class="text-sm font-semibold mb-2 text-gray-700">वर्तमान गैलरी</h4>
 					<div class="grid grid-cols-3 gap-2">
 						<?php foreach ($existingGallery as $gi): ?>
-							<a href="<?= e(img_src($gi['image_path'])) ?>" target="_blank" rel="noopener" class="block rounded overflow-hidden border bg-white">
-								<img src="<?= e(img_src($gi['image_path'])) ?>" alt="<?= e($gi['caption'] ?? $title_hi) ?>" class="w-full h-24 object-cover">
-							</a>
+							<div class="rounded overflow-hidden border bg-white p-1">
+								<a href="<?= e(img_src($gi['image_path'])) ?>" target="_blank" rel="noopener" class="block">
+									<img src="<?= e(img_src($gi['image_path'])) ?>" alt="<?= e($gi['caption'] ?? $title_hi) ?>" class="w-full h-24 object-cover rounded">
+								</a>
+								<label class="flex items-center gap-1 mt-1 text-xs text-gray-700">
+									<input type="checkbox" name="remove_gallery_ids[]" value="<?= (int)$gi['id'] ?>" class="w-4 h-4">
+									<span>हटाएँ</span>
+								</label>
+							</div>
 						<?php endforeach; ?>
 					</div>
+					<p class="text-xs text-gray-500 mt-1">ऊपर “हटाएँ” चुनकर चयनित छवियाँ हटाएँ या “पूरी गैलरी बदलें” चुनें।</p>
 				</div>
 			<?php endif; ?>
 
