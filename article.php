@@ -30,16 +30,16 @@ $metaKeywords = $post['tags'] ?? '';
 include __DIR__ . '/header.php';
 ?>
 <section class="max-w-3xl mx-auto px-4 py-8">
-	<article class="bg-white rounded shadow overflow-hidden">
+	<article class="bg-white rounded shadow overflow-hidden ring-1 ring-blue-100">
 		<?php if (!empty($post['cover_image_path'])): ?>
 			<img src="<?= e(img_src($post['cover_image_path'])) ?>" alt="<?= e($post['title_hi']) ?>" class="w-full h-72 object-cover">
 		<?php endif; ?>
 		<div class="p-6">
-			<div class="flex items-center gap-3 text-sm text-gray-500">
-				<span class="bg-indigo-50 text-indigo-700 px-2 py-1 rounded"><?= e($post['category']) ?></span>
+			<div class="flex items-center gap-3 text-sm text-gray-600">
+				<span class="badge badge-accent"><?= e($post['category']) ?></span>
 				<time><?= date('d M Y', strtotime($post['created_at'])) ?></time>
 			</div>
-			<h1 class="text-3xl font-bold mt-2"><?= e($post['title_hi']) ?></h1>
+			<h1 class="text-3xl font-bold mt-2 text-blue-800"><?= e($post['title_hi']) ?></h1>
 			<div class="prose max-w-none prose-indigo mt-4">
 				<p><?= nl2br(e($post['content_hi'])) ?></p>
 			</div>
@@ -47,18 +47,18 @@ include __DIR__ . '/header.php';
 			<?php if (!empty($post['tags'])): ?>
 				<div class="mt-4 flex flex-wrap gap-2">
 					<?php foreach (explode(',', $post['tags']) as $tag): $t = trim($tag); if (!$t) continue; ?>
-						<span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">#<?= e($t) ?></span>
+						<span class="chip">#<?= e($t) ?></span>
 					<?php endforeach; ?>
 				</div>
 			<?php endif; ?>
 
 			<div class="mt-6">
-				<h3 class="font-semibold mb-2">शेयर करें</h3>
+				<h3 class="font-semibold mb-2 text-fuchsia-800">शेयर करें</h3>
 				<?php $u = urlencode(current_url()); $t = urlencode($post['title_hi']); ?>
 				<div class="flex gap-3">
-					<a class="px-3 py-1 bg-blue-600 text-white rounded" target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u=<?= $u ?>">फेसबुक</a>
-					<a class="px-3 py-1 bg-sky-500 text-white rounded" target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?url=<?= $u ?>&text=<?= $t ?>">ट्विटर</a>
-					<a class="px-3 py-1 bg-green-600 text-white rounded" target="_blank" rel="noopener" href="https://api.whatsapp.com/send?text=<?= $t ?>%20<?= $u ?>">व्हाट्सएप</a>
+					<a class="px-3 py-1 rounded text-white bg-blue-600 hover:bg-blue-700" target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u=<?= $u ?>">फेसबुक</a>
+					<a class="px-3 py-1 rounded text-white bg-sky-500 hover:bg-sky-600" target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?url=<?= $u ?>&text=<?= $t ?>">ट्विटर</a>
+					<a class="px-3 py-1 rounded text-white bg-green-600 hover:bg-green-700" target="_blank" rel="noopener" href="https://api.whatsapp.com/send?text=<?= $t ?>%20<?= $u ?>">व्हाट्सएप</a>
 				</div>
 			</div>
 		</div>
@@ -89,14 +89,14 @@ include __DIR__ . '/header.php';
 	?>
 	<?php if ($related): ?>
 		<div class="mt-8">
-			<h3 class="text-xl font-bold mb-3">संबंधित लेख</h3>
+			<h3 class="text-xl font-bold mb-3 text-blue-800">संबंधित लेख</h3>
 			<div class="grid md:grid-cols-3 gap-6">
 				<?php foreach ($related as $r): ?>
-					<a href="<?= e(BASE_URL . '/article.php?slug=' . urlencode($r['slug'])) ?>" class="block bg-white rounded shadow hover:shadow-lg transition overflow-hidden">
+					<a href="<?= e(BASE_URL . '/article.php?slug=' . urlencode($r['slug'])) ?>" class="block bg-white rounded shadow hover:shadow-lg transition overflow-hidden ring-1 ring-teal-100 hover:ring-amber-300 hover:-translate-y-0.5 duration-200">
 						<?php if (!empty($r['cover_image_path'])): ?>
 							<img src="<?= e($r['cover_image_path']) ?>" alt="<?= e($r['title_hi']) ?>" class="w-full h-36 object-cover">
 						<?php else: ?>
-							<div class="w-full h-36 bg-gray-200"></div>
+							<div class="w-full h-36 bg-gradient-to-br from-fuchsia-50 to-blue-50"></div>
 						<?php endif; ?>
 						<div class="p-3">
 							<h4 class="font-semibold text-sm"><?= e($r['title_hi']) ?></h4>

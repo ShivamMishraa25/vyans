@@ -44,13 +44,13 @@ include __DIR__ . '/header.php';
 ?>
 <section class="max-w-6xl mx-auto px-4 py-8">
 	<div class="flex items-center justify-between mb-4">
-		<h1 class="text-2xl font-bold">डैशबोर्ड</h1>
-		<a href="<?= e(BASE_URL) ?>/admin_edit.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">नया लेख</a>
+		<h1 class="text-2xl font-bold text-blue-800">डैशबोर्ड</h1>
+		<a href="<?= e(BASE_URL) ?>/admin_edit.php" class="btn-primary px-4 py-2 rounded shadow">नया लेख</a>
 	</div>
 	<?php if ($msg): ?><div class="bg-green-50 text-green-700 px-3 py-2 rounded mb-3"><?= e($msg) ?></div><?php endif; ?>
-	<div class="overflow-auto bg-white rounded shadow">
+	<div class="overflow-auto bg-white rounded shadow ring-1 ring-blue-100">
 		<table class="min-w-full text-sm">
-			<thead class="bg-gray-100">
+			<thead class="bg-blue-50 text-blue-800">
 				<tr>
 					<th class="text-left p-2">शीर्षक</th>
 					<th class="text-left p-2">श्रेणी</th>
@@ -64,12 +64,12 @@ include __DIR__ . '/header.php';
 				<tr class="border-t">
 					<td class="p-2"><?= e($p['title_hi']) ?></td>
 					<td class="p-2"><?= e($p['category']) ?></td>
-					<td class="p-2"><?= $p['is_top_article'] ? 'हाँ' : 'नहीं' ?></td>
+					<td class="p-2"><?= $p['is_top_article'] ? '<span class="chip">हाँ</span>' : 'नहीं' ?></td>
 					<td class="p-2"><?= date('d M Y', strtotime($p['created_at'])) ?></td>
-					<td class="p-2 space-x-2">
-						<a class="text-indigo-700" href="<?= e(BASE_URL) ?>/admin_edit.php?id=<?= (int)$p['id'] ?>">संपादित</a>
-						<a class="text-red-700" href="<?= e(BASE_URL) ?>/admin_dashboard.php?action=delete&id=<?= (int)$p['id'] ?>&csrf=<?= e($_SESSION['csrf_token']) ?>" onclick="return confirm('क्या आप वाकई हटाना चाहते हैं?');">हटाएँ</a>
-						<a class="text-gray-700" target="_blank" href="<?= e(BASE_URL) ?>/article.php?slug=<?= urlencode($p['slug']) ?>">देखें</a>
+					<td class="p-2 space-x-3">
+						<a class="text-blue-700 hover:underline" href="<?= e(BASE_URL) ?>/admin_edit.php?id=<?= (int)$p['id'] ?>">संपादित</a>
+						<a class="text-red-700 hover:underline" href="<?= e(BASE_URL) ?>/admin_dashboard.php?action=delete&id=<?= (int)$p['id'] ?>&csrf=<?= e($_SESSION['csrf_token']) ?>" onclick="return confirm('क्या आप वाकई हटाना चाहते हैं?');">हटाएँ</a>
+						<a class="text-fuchsia-700 hover:underline" target="_blank" href="<?= e(BASE_URL) ?>/article.php?slug=<?= urlencode($p['slug']) ?>">देखें</a>
 					</td>
 				</tr>
 			<?php endforeach; ?>

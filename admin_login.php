@@ -33,13 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <?php $pageTitle = 'लॉगिन'; include __DIR__ . '/header.php'; ?>
 <section class="max-w-md mx-auto px-4 py-12">
-	<h1 class="text-2xl font-bold mb-4">एडमिन लॉगिन</h1>
+	<h1 class="text-2xl font-bold mb-4 text-blue-800">एडमिन लॉगिन</h1>
 	<?php if ($error): ?><div class="bg-red-50 text-red-700 px-3 py-2 rounded mb-3"><?= e($error) ?></div><?php endif; ?>
 	<form id="loginForm" method="post" class="bg-white rounded shadow p-4 space-y-3" novalidate>
 		<input type="hidden" name="csrf_token" value="<?= e($_SESSION['csrf_token']) ?>">
-		<input type="text" name="username" placeholder="उपयोगकर्ता नाम" required class="w-full px-3 py-2 border rounded">
-		<input type="password" name="password" placeholder="पासवर्ड" required class="w-full px-3 py-2 border rounded">
-		<button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">लॉगिन</button>
+		<input type="text" name="username" placeholder="उपयोगकर्ता नाम" required class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500">
+		<input type="password" name="password" placeholder="पासवर्ड" required class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-fuchsia-500">
+		<button class="btn-primary text-white px-4 py-2 rounded shadow">लॉगिन</button>
 		<p id="loginErr" class="text-sm text-red-600 hidden">कृपया दोनों फ़ील्ड भरें।</p>
 	</form>
 	<script>
