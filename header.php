@@ -55,6 +55,7 @@
 	<link rel="icon" href="<?= e(BASE_URL) ?>/favicon.ico">
 </head>
 <body class="bg-gradient-to-b from-slate-50 via-white to-slate-50 text-gray-900">
+	<div id="fb-root"></div>
 	<div class="top-ribbon"></div>
 	<header class="header-grad shadow sticky top-0 z-40">
 		<div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -84,34 +85,61 @@
 			</nav>
 		</div>
 
-		<!-- Mobile menu (collapsible) -->
-		<div id="mobileMenu" class="md:hidden hidden px-4 pb-4">
-			<div class="bg-white/10 rounded shadow divide-y divide-white/10">
-				<a class="block px-4 py-2 hover:bg-white/20" href="<?= e(BASE_URL) ?>/index.php">होम</a>
-				<a class="block px-4 py-2 hover:bg-white/20" href="<?= e(BASE_URL) ?>/articles.php">सभी लेख</a>
-				<a class="block px-4 py-2 hover:bg-white/20" href="<?= e(BASE_URL) ?>/about.php">हमारे बारे में</a>
-				<a class="block px-4 py-2 hover:bg-white/20" href="<?= e(BASE_URL) ?>/contact.php">हमसे संपर्क करें</a>
+		<!-- Mobile overlay -->
+		<div id="mobileOverlay" class="md:hidden hidden fixed inset-0 bg-black/40 z-40"></div>
+
+		<!-- Mobile menu (right drawer) -->
+		<div id="mobileMenu" class="md:hidden fixed inset-y-0 right-0 w-72 max-w-[80%] bg-white text-gray-900 shadow-xl transform translate-x-full transition-transform duration-300 z-50">
+			<div class="flex items-center justify-end px-4 py-3 border-b border-gray-200">
+				<button id="navClose" class="p-2 rounded hover:bg-gray-100" aria-label="मेनू बंद करें">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+					</svg>
+				</button>
+			</div>
+			<div class="divide-y divide-gray-200">
+				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/index.php">होम</a>
+				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/articles.php">सभी लेख</a>
+				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/about.php">हमारे बारे में</a>
+				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/contact.php">हमसे संपर्क करें</a>
 				<?php if (is_admin()): ?>
-					<a class="block px-4 py-2 hover:bg-white/20" href="<?= e(BASE_URL) ?>/admin_dashboard.php">डैशबोर्ड</a>
-					<a class="block px-4 py-2 hover:bg-white/20 text-red-200" href="<?= e(BASE_URL) ?>/logout.php">लॉगआउट</a>
+					<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/admin_dashboard.php">डैशबोर्ड</a>
+					<a class="block px-4 py-3 hover:bg-red-50 text-red-600" href="<?= e(BASE_URL) ?>/logout.php">लॉगआउट</a>
 				<?php else: ?>
-					<a class="block px-4 py-2 hover:bg-white/20" href="<?= e(BASE_URL) ?>/admin_login.php">लॉगिन</a>
+					<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/admin_login.php">लॉगिन</a>
 				<?php endif; ?>
 			</div>
 		</div>
 
 		<script>
-			// Toggle mobile menu
+			// Right drawer open/close
 			(function(){
 				var btn = document.getElementById('navToggle');
 				var menu = document.getElementById('mobileMenu');
-				if (!btn || !menu) return;
+				var overlay = document.getElementById('mobileOverlay');
+				var closeBtn = document.getElementById('navClose');
+
+				if (!btn || !menu || !overlay) return;
+
+				function openMenu(){
+					menu.classList.remove('translate-x-full');
+					overlay.classList.remove('hidden');
+					btn.setAttribute('aria-expanded','true');
+				}
+				function closeMenu(){
+					menu.classList.add('translate-x-full');
+					overlay.classList.add('hidden');
+					btn.setAttribute('aria-expanded','false');
+				}
+
 				btn.addEventListener('click', function(){
-					var isHidden = menu.classList.contains('hidden');
-					menu.classList.toggle('hidden');
-					btn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+					var isClosed = menu.classList.contains('translate-x-full');
+					isClosed ? openMenu() : closeMenu();
 				});
+				overlay.addEventListener('click', closeMenu);
+				if (closeBtn) closeBtn.addEventListener('click', closeMenu);
 			})();
 		</script>
 	</header>
+	<main class="min-h-[60vh]">
 	<main class="min-h-[60vh]">
