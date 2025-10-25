@@ -18,7 +18,7 @@
 				?>
 				<form id="contactForm" class="space-y-3" method="post" action="https://api.web3forms.com/submit" novalidate>
 					<!-- Web3Forms required/optional fields -->
-					<input type="hidden" name="access_key" value="79bf0b36-06d1-44cc-a20c-e1aace175be3">
+					<input type="hidden" name="access_key" value="1634c43e-a896-4ee8-9af5-b72dd512d366">
 					<input type="hidden" name="subject" value="व्यान्स न्यूज़ - नया संदेश">
 					<input type="hidden" name="redirect" value="<?= e($__redirect_to) ?>">
 					<!-- Your fields -->
