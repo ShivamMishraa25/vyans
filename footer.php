@@ -11,9 +11,17 @@
 				<?php if ($success): ?>
 					<p class="mb-3 text-green-300">धन्यवाद! आपका संदेश सफलतापूर्वक भेज दिया गया है।</p>
 				<?php endif; ?>
-				<form id="contactForm" class="space-y-3" method="post" action="<?= e(BASE_URL) ?>/contact_handler.php" novalidate>
-					<input type="hidden" name="csrf_token" value="<?= e($_SESSION['csrf_token']) ?>">
-					<input type="hidden" name="redirect_to" value="<?= e(current_url()) ?>">
+				<?php
+					$__cur = current_url();
+					$__sep = (strpos($__cur, '?') === false) ? '?' : '&';
+					$__redirect_to = $__cur . $__sep . 'contact_success=1';
+				?>
+				<form id="contactForm" class="space-y-3" method="post" action="https://api.web3forms.com/submit" novalidate>
+					<!-- Web3Forms required/optional fields -->
+					<input type="hidden" name="access_key" value="79bf0b36-06d1-44cc-a20c-e1aace175be3">
+					<input type="hidden" name="subject" value="व्यान्स न्यूज़ - नया संदेश">
+					<input type="hidden" name="redirect" value="<?= e($__redirect_to) ?>">
+					<!-- Your fields -->
 					<div>
 						<input name="name" type="text" placeholder="आपका नाम" required class="w-full px-3 py-2 rounded bg-white/10 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-fuchsia-500">
 					</div>
