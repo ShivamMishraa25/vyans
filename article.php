@@ -61,6 +61,33 @@ include __DIR__ . '/header.php';
 					<a class="px-3 py-1 rounded text-white bg-green-600 hover:bg-green-700" target="_blank" rel="noopener" href="https://api.whatsapp.com/send?text=<?= $t ?>%20<?= $u ?>">व्हाट्सएप</a>
 				</div>
 			</div>
+
+			<?php
+			// Fetch gallery images for this post
+			$stmtG = $mysqli->prepare('SELECT image_path, caption FROM post_images WHERE post_id = ? ORDER BY COALESCE(sort_order, 999999), id');
+			$stmtG->bind_param('i', $post['id']);
+			$stmtG->execute();
+			$gallery = $stmtG->get_result()->fetch_all(MYSQLI_ASSOC);
+			$stmtG->close();
+			?>
+			<?php if ($gallery): ?>
+				<div class="mt-8">
+					<h3 class="text-xl font-bold mb-3 text-blue-800">गैलरी</h3>
+					<div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+						<?php foreach ($gallery as $gi): ?>
+							<figure class="bg-white rounded overflow-hidden border">
+								<a href="<?= e(img_src($gi['image_path'])) ?>" target="_blank" rel="noopener">
+									<img src="<?= e(img_src($gi['image_path'])) ?>" alt="<?= e($gi['caption'] ?? $post['title_hi']) ?>" class="w-full h-40 object-cover">
+								</a>
+								<?php if (!empty($gi['caption'])): ?>
+									<figcaption class="px-2 py-1 text-xs text-gray-600"><?= e($gi['caption']) ?></figcaption>
+								<?php endif; ?>
+							</figure>
+						<?php endforeach; ?>
+					</div>
+				</div>
+			<?php endif; ?>
+
 		</div>
 	</article>
 

@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS post_relations;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS admin;
 DROP TABLE IF EXISTS hero;
+DROP TABLE IF EXISTS post_images;
 
 -- Posts table
 CREATE TABLE posts (
@@ -18,6 +19,7 @@ CREATE TABLE posts (
   cover_image_path VARCHAR(255) DEFAULT NULL,
   tags VARCHAR(255) DEFAULT NULL,
   is_top_article TINYINT(1) NOT NULL DEFAULT 0,
+  gallery_count INT NOT NULL DEFAULT 0,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -45,6 +47,18 @@ CREATE TABLE hero (
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Gallery images for posts
+CREATE TABLE post_images (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  post_id INT NOT NULL,
+  image_path VARCHAR(255) NOT NULL,
+  caption VARCHAR(255) DEFAULT NULL,
+  sort_order INT DEFAULT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX (post_id),
+  CONSTRAINT fk_post_images_post FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- Mock posts (Hindi)
 INSERT INTO posts (title_hi, slug, content_hi, category, cover_image_path, tags, is_top_article)
 VALUES
@@ -66,5 +80,17 @@ INSERT INTO post_relations (post_id, related_post_id) VALUES
 INSERT INTO hero (id, image_path, intro_text) VALUES
 (1, 'uploads/images/sample1.jpg', N'द व्यान्स में आपका स्वागत है। ताज़ा ख़बरें, विश्लेषण और प्रेरक कहानियाँ, सब कुछ एक ही जगह।');
 
--- handle multiple images
--- add another link for showing posts of biography and one more. also show this tab on homepage somewhere. 
+-- Migration (run manually on existing DB):
+-- ALTER TABLE posts ADD COLUMN gallery_count INT NOT NULL DEFAULT 0;
+-- CREATE TABLE post_images (
+--   id INT AUTO_INCREMENT PRIMARY KEY,
+--   post_id INT NOT NULL,
+--   image_path VARCHAR(255) NOT NULL,
+--   caption VARCHAR(255) DEFAULT NULL,
+--   sort_order INT DEFAULT NULL,
+--   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--   INDEX (post_id),
+--   CONSTRAINT fk_post_images_post FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- Optional: backfill gallery_count
+-- UPDATE posts p SET gallery_count = (SELECT COUNT(*) FROM post_images pi WHERE pi.post_id = p.id);

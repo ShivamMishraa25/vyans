@@ -9,6 +9,7 @@ $editing = $id > 0;
 $title_hi = $category = $content_hi = $tags = $cover_image_path = '';
 $is_top_article = 0;
 $slug = '';
+$existingGallery = []; // Added: holder for current gallery
 
 if ($editing) {
 	$stmt = $mysqli->prepare('SELECT * FROM posts WHERE id=? LIMIT 1');
@@ -24,6 +25,13 @@ if ($editing) {
 	$title_hi = $cur['title_hi']; $category = $cur['category']; $content_hi = $cur['content_hi'];
 	$tags = $cur['tags']; $cover_image_path = $cur['cover_image_path']; $is_top_article = (int)$cur['is_top_article'];
 	$slug = $cur['slug'];
+
+	// Added: fetch existing gallery images for this post
+	$stmtEG = $mysqli->prepare('SELECT id, image_path, caption FROM post_images WHERE post_id=? ORDER BY COALESCE(sort_order, 999999), id');
+	$stmtEG->bind_param('i', $id);
+	$stmtEG->execute();
+	$existingGallery = $stmtEG->get_result()->fetch_all(MYSQLI_ASSOC);
+	$stmtEG->close();
 }
 
 $errors = [];
@@ -73,6 +81,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			}
 		}
 
+		// Handle gallery images (multiple)
+		$galleryNew = []; // store uploaded gallery image relative paths
+		if (!empty($_FILES['gallery_images']) && is_array($_FILES['gallery_images']['name'])) {
+			$uploadDirGal = __DIR__ . '/uploads/gallery';
+			ensure_upload_dir($uploadDirGal);
+			$allowedMimes = ['image/jpeg','image/png','image/gif','image/webp'];
+
+			$names = $_FILES['gallery_images']['name'];
+			$tmpns = $_FILES['gallery_images']['tmp_name'];
+			$errs  = $_FILES['gallery_images']['error'];
+
+			for ($i = 0, $n = count($names); $i < $n; $i++) {
+				if (!isset($names[$i]) || $errs[$i] !== UPLOAD_ERR_OK) continue;
+				$tmp = $tmpns[$i];
+				$mime = @mime_content_type($tmp);
+				if (!in_array($mime, $allowedMimes, true)) continue;
+
+				$fname = safe_filename($names[$i]);
+				$dest = $uploadDirGal . '/' . $fname;
+				if (@move_uploaded_file($tmp, $dest)) {
+					$galleryNew[] = 'uploads/gallery/' . $fname;
+				}
+			}
+		}
+
 		// slug
 		if ($editing) {
 			$slugInput = trim($_POST['slug'] ?? $slug);
@@ -105,6 +138,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					}
 					$stmtR->close();
 				}
+				// Insert new gallery images (if any)
+				if ($galleryNew) {
+					$stmtGI = $mysqli->prepare('INSERT INTO post_images (post_id, image_path) VALUES (?, ?)');
+					foreach ($galleryNew as $gp) {
+						$stmtGI->bind_param('is', $id, $gp);
+						$stmtGI->execute();
+					}
+					$stmtGI->close();
+					// bump gallery_count
+					$add = count($galleryNew);
+					$mysqli->query('UPDATE posts SET gallery_count = gallery_count + ' . (int)$add . ' WHERE id = ' . (int)$id);
+				}
 
 				flash('msg', 'लेख अपडेट किया गया।');
 			} else {
@@ -122,6 +167,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 						$stmtR->execute();
 					}
 					$stmtR->close();
+				}
+				// Insert gallery for new post
+				if (!empty($newId) && $galleryNew) {
+					$stmtGI = $mysqli->prepare('INSERT INTO post_images (post_id, image_path) VALUES (?, ?)');
+					foreach ($galleryNew as $gp) {
+						$stmtGI->bind_param('is', $newId, $gp);
+						$stmtGI->execute();
+					}
+					$stmtGI->close();
+					$add = count($galleryNew);
+					$mysqli->query('UPDATE posts SET gallery_count = gallery_count + ' . (int)$add . ' WHERE id = ' . (int)$newId);
 				}
 
 				flash('msg', 'नया लेख जोड़ा गया।');
@@ -194,10 +250,37 @@ include __DIR__ . '/header.php';
 				</div>
 			<?php endif; ?>
 		</div>
+
+		<div>
+			<label class="block text-sm mb-1 text-gray-700">गैलरी छवियाँ (एक से अधिक)</label>
+			<input id="galleryInput" type="file" name="gallery_images[]" accept="image/*" multiple class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-indigo-500">
+			<p class="text-xs text-gray-500 mt-1">एक से अधिक छवियाँ चुनें। JPG/PNG/GIF/WEBP समर्थित।</p>
+
+			<?php if ($editing && !empty($existingGallery)): ?>
+				<div class="mt-3">
+					<h4 class="text-sm font-semibold mb-2 text-gray-700">वर्तमान गैलरी</h4>
+					<div class="grid grid-cols-3 gap-2">
+						<?php foreach ($existingGallery as $gi): ?>
+							<a href="<?= e(img_src($gi['image_path'])) ?>" target="_blank" rel="noopener" class="block rounded overflow-hidden border bg-white">
+								<img src="<?= e(img_src($gi['image_path'])) ?>" alt="<?= e($gi['caption'] ?? $title_hi) ?>" class="w-full h-24 object-cover">
+							</a>
+						<?php endforeach; ?>
+					</div>
+				</div>
+			<?php endif; ?>
+
+			<!-- Live preview of newly selected gallery images -->
+			<div id="galleryNewPreviewWrap" class="mt-3 hidden">
+				<h4 class="text-sm font-semibold mb-2 text-gray-700">नई गैलरी पूर्वावलोकन</h4>
+				<div id="galleryNewPreview" class="grid grid-cols-3 gap-2"></div>
+			</div>
+		</div>
+
 		<div>
 			<label class="block text-sm mb-1 text-gray-700">सामग्री (हिंदी)</label>
 			<textarea name="content_hi" rows="10" placeholder="पूरा लेख यहाँ लिखें..." required class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-fuchsia-500"><?= e($content_hi) ?></textarea>
 		</div>
+
 		<div>
 			<label class="block text-sm mb-1 text-gray-700">संबंधित लेख चुनें (मल्टी-सेलेक्ट)</label>
 			<select name="related_posts[]" multiple size="6" class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-teal-500">
@@ -255,6 +338,45 @@ include __DIR__ . '/header.php';
 			window.addEventListener('beforeunload', function(){
 				if (lastUrl) URL.revokeObjectURL(lastUrl);
 			});
+		})();
+
+		// Live preview for newly selected gallery images (multiple)
+		(function(){
+			const input = document.getElementById('galleryInput');
+			const wrap = document.getElementById('galleryNewPreviewWrap');
+			const cont = document.getElementById('galleryNewPreview');
+			let urls = [];
+			if (!input || !wrap || !cont) return;
+
+			function clearPreviews() {
+				urls.forEach(u => URL.revokeObjectURL(u));
+				urls = [];
+				cont.innerHTML = '';
+			}
+
+			input.addEventListener('change', function(){
+				clearPreviews();
+				if (!this.files || this.files.length === 0) {
+					wrap.classList.add('hidden');
+					return;
+				}
+				Array.from(this.files).forEach(f => {
+					if (!/^image\//.test(f.type)) return;
+					const u = URL.createObjectURL(f);
+					urls.push(u);
+					const img = document.createElement('img');
+					img.src = u;
+					img.alt = 'गैलरी पूर्वावलोकन';
+					img.className = 'w-full h-24 object-cover rounded border';
+					const holder = document.createElement('div');
+					holder.className = 'rounded overflow-hidden bg-white';
+					holder.appendChild(img);
+					cont.appendChild(holder);
+				});
+				wrap.classList.toggle('hidden', cont.children.length === 0);
+			});
+
+			window.addEventListener('beforeunload', clearPreviews);
 		})();
 	</script>
 </section>
