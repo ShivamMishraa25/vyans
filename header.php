@@ -52,6 +52,14 @@
 	<?php if (!empty($metaKeywords)): ?>
 		<meta name="keywords" content="<?= e($metaKeywords) ?>">
 	<?php endif; ?>
+
+	<?php if (!empty($og) && is_array($og)): ?>
+		<meta property="og:title" content="<?= e($og['title'] ?? '') ?>">
+		<meta property="og:image" content="<?= e($og['image'] ?? '') ?>">
+		<meta property="og:url" content="<?= e($og['url'] ?? '') ?>">
+		<meta name="twitter:card" content="<?= e($og['twitter_card'] ?? 'summary_large_image') ?>">
+	<?php endif; ?>
+
 	<link rel="icon" href="<?= e(BASE_URL) ?>/favicon.ico">
 </head>
 <body class="bg-gradient-to-b from-slate-50 via-white to-slate-50 text-gray-900">
