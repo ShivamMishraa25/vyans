@@ -31,7 +31,7 @@ $stmt->close();
 include __DIR__ . '/header.php';
 ?>
 <section class="max-w-6xl mx-auto px-4 py-8">
-	<h1 class="text-2xl font-bold mb-4 text-blue-800">जीवनी लेख</h1>
+	<h1 class="text-2xl font-bold mb-4 text-blue-800">कानून और न्याय</h1>
 	<?php if ($rows): ?>
 	<div class="grid md:grid-cols-2 gap-6">
 		<?php foreach ($rows as $p): ?>
@@ -51,7 +51,7 @@ include __DIR__ . '/header.php';
 		<?php endforeach; ?>
 	</div>
 	<?php else: ?>
-		<p class="text-sm text-gray-600">कोई जीवनी लेख उपलब्ध नहीं है।</p>
+		<p class="text-sm text-gray-600">कोई कानून और न्याय लेख उपलब्ध नहीं है।</p>
 	<?php endif; ?>
 
 	<!-- Pagination -->
