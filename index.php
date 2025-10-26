@@ -24,6 +24,24 @@ $stmtTop->execute();
 $resTop = $stmtTop->get_result();
 $top = $resTop->fetch_all(MYSQLI_ASSOC);
 $stmtTop->close();
+
+// Featured 4 per category (News, Biography, Law)
+$news4 = $bio4 = $law4 = [];
+
+$stmtN = $mysqli->prepare('SELECT id, title_hi, slug, cover_image_path, created_at FROM posts WHERE isNews=1 ORDER BY created_at DESC LIMIT 4');
+$stmtN->execute();
+$news4 = $stmtN->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmtN->close();
+
+$stmtB = $mysqli->prepare('SELECT id, title_hi, slug, cover_image_path, created_at FROM posts WHERE isBiography=1 ORDER BY created_at DESC LIMIT 4');
+$stmtB->execute();
+$bio4 = $stmtB->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmtB->close();
+
+$stmtL = $mysqli->prepare('SELECT id, title_hi, slug, cover_image_path, created_at FROM posts WHERE isLaw=1 ORDER BY created_at DESC LIMIT 4');
+$stmtL->execute();
+$law4 = $stmtL->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmtL->close();
 ?>
 
 <?php if ($hero): ?>
@@ -140,6 +158,66 @@ $stmtTop->close();
 			हमसे संपर्क करें
 		</a>
 	</div>
+</section>
+
+<!-- New: Featured 2x2 grids (News, Biography, Law) -->
+<section class="max-w-6xl mx-auto px-4 py-6">
+	<?php if ($news4): ?>
+		<h2 class="text-xl font-bold mb-3 text-blue-800">ताज़ा समाचार</h2>
+		<div class="grid grid-cols-2 gap-3">
+			<?php foreach ($news4 as $p): ?>
+				<a href="<?= e(BASE_URL . '/article.php?slug=' . urlencode($p['slug'])) ?>" class="block bg-white rounded shadow overflow-hidden ring-1 ring-blue-100 hover:shadow-lg hover:-translate-y-0.5 transition">
+					<?php if (!empty($p['cover_image_path'])): ?>
+						<img src="<?= e(img_src($p['cover_image_path'])) ?>" alt="<?= e($p['title_hi']) ?>" class="w-full h-20 md:h-36 object-cover">
+					<?php else: ?>
+						<div class="w-full h-36 bg-gradient-to-br from-blue-50 to-fuchsia-50"></div>
+					<?php endif; ?>
+					<div class="p-2 md:p-3">
+						<h3 class="font-semibold text-sm"><?= e($p['title_hi']) ?></h3>
+						<p class="text-xs text-gray-500 mt-1"><?= date('d M Y', strtotime($p['created_at'])) ?></p>
+					</div>
+				</a>
+			<?php endforeach; ?>
+		</div>
+	<?php endif; ?>
+
+	<?php if ($bio4): ?>
+		<h2 class="text-xl font-bold mt-6 mb-3 text-indigo-700">जीवनी लेख</h2>
+		<div class="grid grid-cols-2 gap-3">
+			<?php foreach ($bio4 as $p): ?>
+				<a href="<?= e(BASE_URL . '/article.php?slug=' . urlencode($p['slug'])) ?>" class="block bg-white rounded shadow overflow-hidden ring-1 ring-blue-100 hover:shadow-lg hover:-translate-y-0.5 transition">
+					<?php if (!empty($p['cover_image_path'])): ?>
+						<img src="<?= e(img_src($p['cover_image_path'])) ?>" alt="<?= e($p['title_hi']) ?>" class="w-full h-20 md:h-36 object-cover">
+					<?php else: ?>
+						<div class="w-full h-36 bg-gradient-to-br from-amber-50 to-blue-50"></div>
+					<?php endif; ?>
+					<div class="p-2 md:p-3">
+						<h3 class="font-semibold text-sm"><?= e($p['title_hi']) ?></h3>
+						<p class="text-xs text-gray-500 mt-1"><?= date('d M Y', strtotime($p['created_at'])) ?></p>
+					</div>
+				</a>
+			<?php endforeach; ?>
+		</div>
+	<?php endif; ?>
+
+	<?php if ($law4): ?>
+		<h2 class="text-xl font-bold mt-6 mb-3 text-teal-700">कानून और न्याय</h2>
+		<div class="grid grid-cols-2 gap-3">
+			<?php foreach ($law4 as $p): ?>
+				<a href="<?= e(BASE_URL . '/article.php?slug=' . urlencode($p['slug'])) ?>" class="block bg-white rounded shadow overflow-hidden ring-1 ring-blue-100 hover:shadow-lg hover:-translate-y-0.5 transition">
+					<?php if (!empty($p['cover_image_path'])): ?>
+						<img src="<?= e(img_src($p['cover_image_path'])) ?>" alt="<?= e($p['title_hi']) ?>" class="w-full h-20 md:h-36 object-cover">
+					<?php else: ?>
+						<div class="w-full h-36 bg-gradient-to-br from-fuchsia-50 to-blue-50"></div>
+					<?php endif; ?>
+					<div class="p-2 md:p-3">
+						<h3 class="font-semibold text-sm"><?= e($p['title_hi']) ?></h3>
+						<p class="text-xs text-gray-500 mt-1"><?= date('d M Y', strtotime($p['created_at'])) ?></p>
+					</div>
+				</a>
+			<?php endforeach; ?>
+		</div>
+	<?php endif; ?>
 </section>
 
 <section class="max-w-6xl mx-auto px-4 py-4">
