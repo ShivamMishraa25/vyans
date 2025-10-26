@@ -101,9 +101,9 @@
 			<nav class="hidden md:flex space-x-4">
 				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/index.php">होम</a>
 				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/articles.php">सभी लेख</a>
-				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/biography.php">जीवनी लेख</a>
-				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/law.php">कानून और न्याय</a>
 				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/news.php">ताज़ा समाचार</a>
+				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/law.php">कानून और न्याय</a>
+				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/biography.php">जीवनी लेख</a>
 				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/about.php">हमारे बारे में</a>
 				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/contact.php">हमसे संपर्क करें</a>
 				<?php if (is_admin()): ?>
@@ -116,32 +116,56 @@
 		</div>
 
 		<!-- Mobile overlay -->
-		<div id="mobileOverlay" class="md:hidden hidden fixed inset-0 bg-black/40 z-40"></div>
+		<div id="mobileOverlay" class="md:hidden hidden fixed inset-0 bg-black/50 z-40"></div>
 
 		<!-- Mobile menu (right drawer) -->
-		<div id="mobileMenu" class="md:hidden fixed inset-y-0 right-0 w-72 max-w-[80%] bg-white text-gray-900 shadow-xl transform translate-x-full transition-transform duration-300 z-50">
-			<div class="flex items-center justify-end px-4 py-3 border-b border-gray-200">
-				<button id="navClose" class="p-2 rounded hover:bg-gray-100" aria-label="मेनू बंद करें">
+		<div id="mobileMenu" class="md:hidden fixed inset-y-0 right-0 w-80 max-w-[85%] bg-gradient-to-b from-indigo-700 via-blue-700 to-fuchsia-700 text-white shadow-2xl border-l border-white/10 transform translate-x-full transition-all duration-300 z-50">
+			<!-- Drawer header -->
+			<div class="flex items-center justify-between px-4 py-4 bg-white/10 border-b border-white/10">
+				<span class="font-semibold tracking-wide">द व्यान्स</span>
+				<button id="navClose" class="p-2 rounded hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/40" aria-label="मेनू बंद करें">
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
 					</svg>
 				</button>
 			</div>
-			<div class="divide-y divide-gray-200">
-				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/index.php">होम</a>
-				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/articles.php">सभी लेख</a>
-				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/biography.php">जीवनी लेख</a>
-				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/law.php">कानून और न्याय</a>
-				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/news.php">ताज़ा समाचार</a>
-				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/about.php">हमारे बारे में</a>
-				<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/contact.php">हमसे संपर्क करें</a>
+
+			<!-- Drawer links -->
+			<nav class="px-2 py-3 space-y-1">
+				<a class="flex items-center gap-3 px-3 py-2 mx-1 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30" href="<?= e(BASE_URL) ?>/index.php">
+					<span class="inline-block w-2 h-2 rounded-full bg-white/70"></span> होम
+				</a>
+				<a class="flex items-center gap-3 px-3 py-2 mx-1 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30" href="<?= e(BASE_URL) ?>/articles.php">
+					<span class="inline-block w-2 h-2 rounded-full bg-white/70"></span> सभी लेख
+				</a>
+				<a class="flex items-center gap-3 px-3 py-2 mx-1 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30" href="<?= e(BASE_URL) ?>/news.php">
+					<span class="inline-block w-2 h-2 rounded-full bg-white/70"></span> ताज़ा समाचार
+				</a>
+				<a class="flex items-center gap-3 px-3 py-2 mx-1 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30" href="<?= e(BASE_URL) ?>/law.php">
+					<span class="inline-block w-2 h-2 rounded-full bg-white/70"></span> कानून और न्याय
+				</a>
+				<a class="flex items-center gap-3 px-3 py-2 mx-1 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30" href="<?= e(BASE_URL) ?>/biography.php">
+					<span class="inline-block w-2 h-2 rounded-full bg-white/70"></span> जीवनी लेख
+				</a>
+				<a class="flex items-center gap-3 px-3 py-2 mx-1 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30" href="<?= e(BASE_URL) ?>/about.php">
+					<span class="inline-block w-2 h-2 rounded-full bg-white/70"></span> हमारे बारे में
+				</a>
+				<a class="flex items-center gap-3 px-3 py-2 mx-1 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30" href="<?= e(BASE_URL) ?>/contact.php">
+					<span class="inline-block w-2 h-2 rounded-full bg-white/70"></span> हमसे संपर्क करें
+				</a>
 				<?php if (is_admin()): ?>
-					<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/admin_dashboard.php">डैशबोर्ड</a>
-					<a class="block px-4 py-3 hover:bg-red-50 text-red-600" href="<?= e(BASE_URL) ?>/logout.php">लॉगआउट</a>
+					<a class="flex items-center gap-3 px-3 py-2 mx-1 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30" href="<?= e(BASE_URL) ?>/admin_dashboard.php">
+						<span class="inline-block w-2 h-2 rounded-full bg-white/70"></span> डैशबोर्ड
+					</a>
+					<a class="flex items-center gap-3 px-3 py-2 mx-1 rounded-md bg-white/10 hover:bg-white/20 text-red-200 focus:outline-none focus:ring-2 focus:ring-white/30" href="<?= e(BASE_URL) ?>/logout.php">
+						<span class="inline-block w-2 h-2 rounded-full bg-red-200/80"></span> लॉगआउट
+					</a>
 				<?php else: ?>
-					<a class="block px-4 py-3 hover:bg-gray-100" href="<?= e(BASE_URL) ?>/admin_login.php">लॉगिन</a>
+					<a class="flex items-center gap-3 px-3 py-2 mx-1 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30" href="<?= e(BASE_URL) ?>/admin_login.php">
+						<span class="inline-block w-2 h-2 rounded-full bg-white/70"></span> लॉगिन
+					</a>
 				<?php endif; ?>
-			</div>
+			</nav>
 		</div>
 
 		<script>
