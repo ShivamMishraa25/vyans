@@ -88,17 +88,36 @@
 		<div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
 			<a href="<?= e(BASE_URL) ?>/" class="text-2xl font-bold drop-shadow">द व्यान्स</a>
 
-			<!-- Mobile hamburger -->
-			<button id="navToggle"
-				class="md:hidden inline-flex items-center justify-center p-2 rounded bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
-				aria-controls="mobileMenu" aria-expanded="false" aria-label="मेनू खोलें">
-				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-					<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-				</svg>
-			</button>
+			<!-- Mobile search + hamburger -->
+			<div class="flex items-center gap-2 md:hidden">
+				<!-- Mobile search icon -->
+				<button id="searchToggle"
+					class="inline-flex items-center justify-center p-2 rounded bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
+					aria-controls="mobileSearch" aria-expanded="false" aria-label="खोज खोलें">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<circle cx="11" cy="11" r="7"></circle>
+						<path d="M21 21l-3.5-3.5"></path>
+					</svg>
+				</button>
+
+				<!-- Mobile hamburger -->
+				<button id="navToggle"
+					class="inline-flex items-center justify-center p-2 rounded bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
+					aria-controls="mobileMenu" aria-expanded="false" aria-label="मेनू खोलें">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+					</svg>
+				</button>
+			</div>
 
 			<!-- Desktop nav -->
-			<nav class="hidden md:flex space-x-4">
+			<nav class="hidden md:flex items-center space-x-4">
+				<!-- Desktop inline search -->
+				<form action="<?= e(BASE_URL) ?>/search_results.php" method="get" class="ml-2">
+					<input type="search" name="query" placeholder="खोजें..." aria-label="लेख खोजें"
+						class="px-3 py-1.5 rounded bg-white/10 placeholder-white/70 text-white focus:bg-white focus:text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-400"
+						required>
+				</form>
 				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/index.php">होम</a>
 				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/articles.php">सभी लेख</a>
 				<a class="hover:underline underline-offset-4" href="<?= e(BASE_URL) ?>/news.php">ताज़ा समाचार</a>
@@ -168,6 +187,23 @@
 			</nav>
 		</div>
 
+		<!-- Mobile search overlay -->
+		<div id="mobileSearch" class="md:hidden hidden fixed inset-0 z-50">
+			<div class="absolute inset-0 bg-black/50"></div>
+			<div class="relative z-10 bg-white text-gray-900 shadow-lg">
+				<form action="<?= e(BASE_URL) ?>/search_results.php" method="get" class="flex items-center gap-2 px-4 py-3">
+					<input type="search" name="query" placeholder="शीर्षक से खोजें..." aria-label="लेख खोजें" autofocus
+						class="flex-1 px-3 py-2 rounded border focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+					<button class="px-3 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">खोजें</button>
+					<button type="button" id="searchClose" class="p-2 rounded hover:bg-gray-100" aria-label="खोज बंद करें">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+						</svg>
+					</button>
+				</form>
+			</div>
+		</div>
+
 		<script>
 			// Right drawer open/close
 			(function(){
@@ -195,6 +231,37 @@
 				});
 				overlay.addEventListener('click', closeMenu);
 				if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+			})();
+
+			// Mobile search open/close
+			(function(){
+				var t = document.getElementById('searchToggle');
+				var o = document.getElementById('mobileSearch');
+				var closeBtn = document.getElementById('searchClose');
+				if (!t || !o) return;
+
+				function openSearch(){
+					o.classList.remove('hidden');
+					t.setAttribute('aria-expanded','true');
+					// focus input after open
+					setTimeout(function(){
+						var inp = o.querySelector('input[name="query"]');
+						inp && inp.focus();
+					}, 50);
+				}
+				function closeSearch(){
+					o.classList.add('hidden');
+					t.setAttribute('aria-expanded','false');
+				}
+
+				t.addEventListener('click', function(){
+					o.classList.contains('hidden') ? openSearch() : closeSearch();
+				});
+				if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+				// close on backdrop click
+				o.addEventListener('click', function(e){ if (e.target === o) closeSearch(); });
+				// esc to close
+				document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeSearch(); });
 			})();
 		</script>
 	</header>
