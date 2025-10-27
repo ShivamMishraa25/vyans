@@ -18,6 +18,7 @@ CREATE TABLE posts (
   category VARCHAR(50) NOT NULL,
   cover_image_path VARCHAR(255) DEFAULT NULL,
   tags VARCHAR(255) DEFAULT NULL,
+  author_name VARCHAR(100) DEFAULT NULL,
   is_top_article TINYINT(1) NOT NULL DEFAULT 0,
   gallery_count INT NOT NULL DEFAULT 0,
   -- New categorization flags
@@ -102,6 +103,7 @@ INSERT INTO hero (id, image_path, intro_text) VALUES
 -- ALTER TABLE posts ADD COLUMN isBiography TINYINT(1) NOT NULL DEFAULT 0 AFTER gallery_count;
 -- ALTER TABLE posts ADD COLUMN isNews TINYINT(1) NOT NULL DEFAULT 0 AFTER isBiography;
 -- ALTER TABLE posts ADD COLUMN isLaw TINYINT(1) NOT NULL DEFAULT 0 AFTER isNews;
+-- ALTER TABLE posts ADD COLUMN author_name VARCHAR(100) DEFAULT NULL AFTER tags;
 
 
 -- handle multiple images

@@ -8,7 +8,7 @@ if ($slug === '') {
 	exit;
 }
 
-$stmt = $mysqli->prepare('SELECT id, title_hi, content_hi, category, cover_image_path, tags, created_at FROM posts WHERE slug = ? LIMIT 1');
+$stmt = $mysqli->prepare('SELECT id, title_hi, content_hi, category, cover_image_path, tags, author_name, created_at FROM posts WHERE slug = ? LIMIT 1');
 $stmt->bind_param('s', $slug);
 $stmt->execute();
 $post = $stmt->get_result()->fetch_assoc();
@@ -50,9 +50,12 @@ include __DIR__ . '/header.php';
 			<img src="<?= e(img_src($post['cover_image_path'])) ?>" alt="<?= e($post['title_hi']) ?>" class="w-full h-72 object-cover">
 		<?php endif; ?>
 		<div class="p-6">
-			<div class="flex items-center gap-3 text-sm text-gray-600">
+			<div class="flex flex-wrap items-center gap-3 text-sm text-gray-600">
 				<span class="badge badge-accent"><?= e($post['category']) ?></span>
 				<time><?= date('d M Y', strtotime($post['created_at'])) ?></time>
+				<?php if (!empty($post['author_name'])): ?>
+					<span class="chip">लेखक: <?= e($post['author_name']) ?></span>
+				<?php endif; ?>
 			</div>
 			<h1 class="text-3xl font-bold mt-2 text-blue-800"><?= e($post['title_hi']) ?></h1>
 			<div class="prose max-w-none prose-indigo mt-4">

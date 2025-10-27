@@ -7,6 +7,7 @@ $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $editing = $id > 0;
 
 $title_hi = $category = $content_hi = $tags = $cover_image_path = '';
+$author_name = ''; // NEW: author field
 $is_top_article = 0;
 $slug = '';
 $existingGallery = []; // Added: holder for current gallery
@@ -29,6 +30,7 @@ if ($editing) {
 	$title_hi = $cur['title_hi']; $category = $cur['category']; $content_hi = $cur['content_hi'];
 	$tags = $cur['tags']; $cover_image_path = $cur['cover_image_path']; $is_top_article = (int)$cur['is_top_article'];
 	$slug = $cur['slug'];
+	$author_name = $cur['author_name'] ?? ''; // NEW: load author
 	// Load flags if present
 	$isBiography = (int)($cur['isBiography'] ?? 0);
 	$isNews      = (int)($cur['isNews'] ?? 0);
@@ -52,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$category = trim($_POST['category'] ?? '');
 		$content_hi = trim($_POST['content_hi'] ?? '');
 		$tags = trim($_POST['tags'] ?? '');
+		$author_name = trim($_POST['author_name'] ?? ''); // NEW: read author
 		$is_top_article = isset($_POST['is_top_article']) ? 1 : 0;
 		// New flags from form
 		$isBiography = isset($_POST['isBiography']) ? 1 : 0;
@@ -133,8 +136,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 		if (!$errors) {
 			if ($editing) {
-				$stmt = $mysqli->prepare('UPDATE posts SET title_hi=?, slug=?, content_hi=?, category=?, cover_image_path=?, tags=?, is_top_article=?, isBiography=?, isNews=?, isLaw=? WHERE id=?');
-				$stmt->bind_param('ssssssiiiii', $title_hi, $slug, $content_hi, $category, $cover_image_path, $tags, $is_top_article, $isBiography, $isNews, $isLaw, $id);
+				// include author_name in update
+				$stmt = $mysqli->prepare('UPDATE posts SET title_hi=?, slug=?, content_hi=?, category=?, cover_image_path=?, tags=?, author_name=?, is_top_article=?, isBiography=?, isNews=?, isLaw=? WHERE id=?');
+				$stmt->bind_param('sssssssiiiii', $title_hi, $slug, $content_hi, $category, $cover_image_path, $tags, $author_name, $is_top_article, $isBiography, $isNews, $isLaw, $id);
 				$stmt->execute();
 				$stmt->close();
 
@@ -203,8 +207,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 				flash('msg', 'लेख अपडेट किया गया।');
 			} else {
-				$stmt = $mysqli->prepare('INSERT INTO posts (title_hi, slug, content_hi, category, cover_image_path, tags, is_top_article, isBiography, isNews, isLaw) VALUES (?,?,?,?,?,?,?,?,?,?)');
-				$stmt->bind_param('ssssssiiii', $title_hi, $slug, $content_hi, $category, $cover_image_path, $tags, $is_top_article, $isBiography, $isNews, $isLaw);
+				// include author_name in insert
+				$stmt = $mysqli->prepare('INSERT INTO posts (title_hi, slug, content_hi, category, cover_image_path, tags, author_name, is_top_article, isBiography, isNews, isLaw) VALUES (?,?,?,?,?,?,?,?,?,?,?)');
+				$stmt->bind_param('sssssssiiii', $title_hi, $slug, $content_hi, $category, $cover_image_path, $tags, $author_name, $is_top_article, $isBiography, $isNews, $isLaw);
 				$stmt->execute();
 				$newId = $stmt->insert_id;
 				$stmt->close();
@@ -286,6 +291,11 @@ include __DIR__ . '/header.php';
 		<div>
 			<label class="block text-sm mb-1 text-gray-700">टैग्स/हैशटैग (कौमा से अलग करें)</label>
 			<input type="text" name="tags" value="<?= e($tags) ?>" placeholder="उदा: भारत,टेक,AI" class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-amber-500">
+		</div>
+		<!-- NEW: Author name -->
+		<div>
+			<label class="block text-sm mb-1 text-gray-700">लेखक</label>
+			<input type="text" name="author_name" value="<?= e($author_name) ?>" placeholder="लेखक का नाम (उदा: अंशु सिंह)" class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-indigo-500">
 		</div>
 		<div class="flex flex-wrap items-center gap-4">
 			<label class="inline-flex items-center gap-2">
